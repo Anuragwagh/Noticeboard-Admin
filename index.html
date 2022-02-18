@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <title>Admin | Signage | NDMVP</title>
+  <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/bulma/0.6.2/css/bulma.css'>
+<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css'>
+
+</head>
+<script>
+function init(){
+
+var c = sessionStorage.getItem("status");
+if(c=="logged"){
+setTimeout(function () { document.location.href = "notice.html" }, 1000);
+}
+
+}
+var attempt = 3; // Variable to count number of attempts.
+// Below function Executes on click of login button.
+function validate(){
+var username = document.getElementById("username").value;
+var password = document.getElementById("password").value;
+if ( username == "admin" && password == "kbtcoe"){
+sessionStorage.setItem("status", "logged");
+alert ("Login successfully");
+setTimeout(function () { document.location.href = "notice.html" }, 1000);
+return false;
+}
+else{
+attempt --;// Decrementing by one.
+alert("You have left "+attempt+" attempt;");
+// Disabling fields after 3 attempts.
+if( attempt == 0){
+document.getElementById("username").disabled = true;
+document.getElementById("password").disabled = true;
+document.getElementById("submit").disabled = true;
+return false;
+}
+}
+}
+</script>
+<body onload="init()">
+<!-- partial:index.partial.html -->
+<section class="hero is-info is-fullheight">
+  <div class="hero-body">
+    <div class="container">
+      <div class="columns is-centered">
+        <div class="column is-5-tablet is-4-desktop is-3-widescreen">
+          <form action="" class="box" method="post">
+            <div class="field">
+              <label for="" class="label" >Username</label>
+              <div class="control has-icons-left">
+                <input type="text" id="username" placeholder="username" class="input" required>
+                <span class="icon is-small is-left">
+                  <i class="fa fa-user"></i>
+                </span>
+              </div>
+            </div>
+            <div class="field">
+              <label for="" class="label">Password</label>
+              <div class="control has-icons-left">
+                <input type="password" id="password" placeholder="*******" class="input" required>
+                <span class="icon is-small is-left">
+                  <i class="fa fa-lock"></i>
+                </span>
+              </div>
+            </div>
+            <div class="field">
+              <label for="" class="checkbox">
+                <input type="checkbox">
+               Remember me
+              </label>
+            </div>
+            <div class="field">
+              <input type="button" class="button is-info"  onclick="validate()" id="submit" value="Login">
+               
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- partial -->
+  
+</body>
+</html>

@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Digital Signage</title>
+	<link rel="stylesheet" href="style1.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.6.2/css/bulma.min.css">
+	<script defer src="https://use.fontawesome.com/releases/v5.0.0/js/all.js"></script>
+	
+</head>
+<script>
+
+
+
+function logout(){
+setTimeout(function () { document.location.href = "index.html" }, 1000);
+}
+
+</script>
+<body>
+
+
+	<div id ="navigation">
+
+
+
+		<ul>
+
+			<li></li>
+			<li><a href="notice.html">Notices</a></li>
+			<li><a href="images.html"  class="active" >Images</a></li>
+			<li style="float:right"><button id ="btnlogout"class="button5">Logout</button></li>
+		  </ul>
+
+
+</div>
+
+<div> <p> &nbsp; </p>
+	</div>
+
+<section class="hero is-link is-mobile">
+  <div class="hero-body">
+    <div class="container">
+      <h1 class="title">
+		DIGITAL SIGNAGE
+		<p> &nbsp; </p>
+      </h1>
+      <h2 class="subtitle">
+		  
+        The Digital Notice Board creates an instant bonding and quick messaging in the college. A technology driven method that allows messaging students and staffs from different workstations, floors or locations.
+      </h2>
+
+	  
+    </div>
+	
+  </div>
+</section>
+
+	<section class="section">
+	
+		<div class="container">
+			<h1 class="title">
+				Gallary Images
+			</h1>
+			
+			<div class="content">
+				<input class="button" type="file"  id="files" name="files[]" multiple />
+				<input class="button" type="date"  id="datePicker" />
+				<button class="button" id="btn" onclick="uploadFile()">Upload </button>
+			</div>
+			<div id="card-list" class="columns is-mobile">
+
+			</div>
+			
+			<table class="table is-bordered is-striped is-fullwidth" id="List">
+				<thead>
+					<tr>
+						<th>Sr.No</th>
+						<th>Name</th>
+						<th>Image</th>
+						<th>Delete</th>
+					</tr>
+				</thead>
+				<tbody>
+					
+				</tbody>
+			</table>
+		</div>
+
+	</section>
+	<script src="https://code.jquery.com/jquery-2.2.4.min.js"
+	integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
+	crossorigin="anonymous"></script>
+	
+	<script src="https://www.gstatic.com/firebasejs/7.10.0/firebase-app.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/7.10.0/firebase-storage.js"></script>
+
+	<script>
+		var config = {
+			apiKey: "AIzaSyC-saRlSnuXxxA_oDkgc9wN6r5VkG__Jcc",
+    authDomain: "noticeboard-70e06.firebaseapp.com",
+    databaseURL: "https://noticeboard-70e06.firebaseio.com",
+    projectId: "noticeboard-70e06",
+    storageBucket: "noticeboard-70e06.appspot.com",
+    messagingSenderId: "382302224140",
+    appId: "1:382302224140:web:a6f9436d6ed897ce831329",
+    measurementId: "G-0LJFQJECKE"
+		};
+		firebase.initializeApp(config);
+		var storageRef = firebase.storage().ref();
+
+			var date = new Date();
+			var day = date.getDate();
+			var month = date.getMonth() + 1;
+			var year = date.getFullYear();
+			if (month < 10) month = "0" + month;
+			if (day < 10) day = "0" + day;
+			var today = year + "-" + month + "-" + day;       
+			$("#datePicker").attr("value", today);
+		var i=1;
+		storageRef.child('images/').listAll().then(function(result){
+		//console.log(result.items);
+			result.items.forEach(function(imageRef){
+				console.log(imageRef.name);
+				var tr;
+				imageRef.getDownloadURL().then(function(url){
+				  tr = "<tr><td>"+i+"</td><td class='imgName'>"+imageRef.name+"</td><td><img src = '"+url+"' width='15%'></td><td><a onclick='dele(this)'; class='delete is-large '></a></td></tr>";
+				  $('#List tbody').append(tr);
+				  i++;
+				});
+				
+			});
+		});
+		function dele(a){
+			var name = $(a).closest('tr').find('.imgName').text();
+			console.log(name);
+			var desertRef = storageRef.child('images/'+name);
+			desertRef.delete().then(function() {
+				alert('File deleted successfully');
+				location.reload();
+			}).catch(function(error) {
+				alert('Uh-oh, an error occurred!');
+			});
+		}
+
+		
+    //function to save file
+    function uploadFile(){
+	
+      var t = $("#datePicker").val();
+      // Created a Storage Reference with root dir
+      var storageRef = firebase.storage().ref();
+      // Get the file from DOM
+      var file = document.getElementById("files").files[0];
+      console.log(file);
+      
+      //dynamically set reference to the file name
+      var thisRef = storageRef.child('images/'+ t +'_'+file.name);
+	  
+      //put request upload file to firebase storage
+      thisRef.put(file).then(function(snapshot) {
+        alert("File Uploaded")
+		location.reload();	
+     });	  
+	  
+    }
+	
+	$( "#btnlogout" ).click(function() {
+			sessionStorage.clear();
+			setTimeout(function () { document.location.href = "index.html" }, 1000);
+		});
+
+ </script>
+
+</body>
+</html>

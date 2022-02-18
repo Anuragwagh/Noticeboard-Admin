@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Digital Signage</title>
+	<link rel="stylesheet" href="style1.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.6.2/css/bulma.min.css">
+	<script defer src="https://use.fontawesome.com/releases/v5.0.0/js/all.js"></script>
+	<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest">
+
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+</head>
+<script>
+function logout(){
+setTimeout(function () { document.location.href = "index.html" }, 1000);
+}
+
+</script>
+
+<body>
+
+
+
+
+<div id ="navigation">
+
+
+	<ul>
+
+		<li></li>
+		<li><a href="notice.html" class="active" >Notices</a></li>
+		<li><a href="images.html"  >Images</a></li>
+		<li style="float:right"><button id ="btnlogout" class ="button5">Logout</button></li>
+	  </ul>
+
+
+
+</div>
+
+
+<section class="hero is-link is-mobile">
+  <div class="hero-body">
+    <div class="container">
+      <h1 class="title">
+		DIGITAL SIGNAGE
+		<p>&nbsp; </p>
+	  </h1>
+	
+	
+      <h2 class="subtitle">
+        The Digital Notice Board creates an instant bonding and quick messaging in the  college. A technology driven device that allows messaging employees working at different workstations, floors or locations.
+      </h2>
+	  <button id="btnAdd" class="button"><i class="fa fa-plus"></i> Add Notice</button>
+    </div>
+	
+  </div>
+</section>
+
+			
+			
+				
+    
+	
+
+
+	<br>
+		<div class="container">
+			
+				<div id="card-list" class="columns" style="overflow-x:scroll">
+
+				</div>
+				</div>
+			
+		
+		<div id="modal" class="modal is-mobile">
+			<div class="modal-background"></div>
+			<div class="modal-card">
+				<header class="modal-card-head">
+					<p class="modal-card-title">New Notice</p>
+					<button class="btnClose delete" aria-label="close"></button>
+				</header>
+				<section class="modal-card-body">
+					<div class="field">
+						<label class="label">Notice</label>
+						<div class="control">
+							<input type="hidden" id="txtType">
+							<input type="hidden" id="txtKey">
+							<input class="input" id="txtName" type="text" placeholder="Important Notice">
+						</div>
+						<p class="help"> </p>
+					</div>
+					<div class="field">
+						<label class="label">Scrolling</label>
+						<div class="control">
+							<input class="input" id="txtnotice_body" type="text" placeholder="Notice Scroll">
+						</div>
+						<p class="help"> </p>
+					</div>
+					<div class="field">
+						<label class="label">Date</label>
+						<div class="control">
+							<input class="input" id="txtPic" type="date" placeholder="Choose Date">
+						</div>
+						<p class="help"></p>
+					</div>
+				</section>
+				<footer class="modal-card-foot">
+					<button id="btnSave" class="button is-success">Save changes</button>
+					<button id="btnClose" class="button">Cancel</button>
+				</footer>
+			</div>
+		</div>
+
+	<script src="https://code.jquery.com/jquery-2.2.4.min.js"
+	integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
+	crossorigin="anonymous"></script>
+	<script src="https://www.gstatic.com/firebasejs/4.10.0/firebase.js"></script>
+	<script>
+		var nextkey =0;
+		var config = {
+			apiKey: "AIzaSyC-saRlSnuXxxA_oDkgc9wN6r5VkG__Jcc",
+    authDomain: "noticeboard-70e06.firebaseapp.com",
+    databaseURL: "https://noticeboard-70e06.firebaseio.com",
+    projectId: "noticeboard-70e06",
+    storageBucket: "noticeboard-70e06.appspot.com",
+    messagingSenderId: "382302224140",
+    appId: "1:382302224140:web:a6f9436d6ed897ce831329",
+    measurementId: "G-0LJFQJECKE"
+		};
+		firebase.initializeApp(config);
+		var database = firebase.database();
+		
+
+		database.ref('notice').on('child_added', function(data) {
+			add_data_table(data.val().head_notice,data.val().date,data.val().notice_body,data.key);
+			var lastkey = data.key;
+			nextkey = parseInt(lastkey)+1;
+		});
+		database.ref('notice').on('child_changed', function(data) {
+			update_data_table(data.val().head_notice,data.val().date,data.val().notice_body,data.key)
+		});
+		database.ref('notice').on('child_removed', function(data) {
+			remove_data_table(data.key)
+		});
+
+		function add_data_table(name,pic,notice_body,key){
+			$("#card-list").prepend('<div class="column is-3" id="'+key+'"><div class="card is-mobile"><div class="card-image"><figure class="image is-4by3"><img src="'+'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcRp_1fR1FUAG31dHTucqszte3DpUhSN5lR1CRxDq3bTCRcFMN6O'+'"></figure></div><div class="card-content"><div class="media"><div class="media-content"><p class="title is-4">'+name+'</p><p class="subtitle is-6">@'+notice_body+'</p></div></div></div><footer class="card-footer"><a href="#" data-key="'+key+'" class="card-footer-item btnEdit">Edit</a><a href="#" class="card-footer-item btnRemove"  data-key="'+key+'">Remove</a></footer></div></div>');
+		}
+		function update_data_table(name,pic,notice_body,key){
+			$("#card-list #"+key).html('<div class="card"><div class="card-image"><figure class="image is-4by3"><img src="'+pic+'"></figure></div><div class="card-content"><div class="media"><div class="media-content"><p class="title is-4">'+name+'</p><p class="subtitle is-6">@'+notice_body+'</p></div></div></div><footer class="card-footer"><a href="#" class="card-footer-item btnEdit"  data-key="'+key+'">Edit</a><a  data-key="'+key+'" href="#" class="card-footer-item btnRemove">Remove</a></footer></div>');
+		}
+		function remove_data_table(key){
+			$("#card-list #"+key).remove();
+		}
+		function new_data(name,notice_body,pic,key){
+			database.ref('notice/' + key).set({
+				head_notice: name,
+				notice_body: notice_body,
+				date : pic
+			});
+		}
+		function update_data(name,notice_body,pic,key){
+			database.ref('notice/' + key).update({
+				head_notice: name,
+				notice_body: notice_body,
+				date : pic
+			});
+		}
+		$( "#btnAdd" ).click(function() {
+			$("#txtName").val("");
+			$("#txtnotice_body").val("");
+			var date = new Date();
+			var day = date.getDate();
+			var month = date.getMonth() + 1;
+			var year = date.getFullYear();
+			if (month < 10) month = "0" + month;
+			if (day < 10) day = "0" + day;
+			var today = year + "-" + month + "-" + day;       
+			$("#txtPic").attr("value", today);
+			$("#txtType").val("N");
+			$("#txtKey").val("0");
+			$( "#modal" ).addClass( "is-active" );
+
+		});
+		$("#btnSave" ).click(function() {
+			if($("#txtType").val() == 'N'){
+				database.ref('notice').once("value").then(function(snapshot) {
+					if(snapshot.numChildren()==0){
+						nextkey = 1;
+					}
+					new_data($("#txtName").val(),$("#txtnotice_body").val(),$("#txtPic").val(),nextkey);
+				});
+			}else{
+				update_data($("#txtName").val(),$("#txtnotice_body").val(),$("#txtPic").val(),$("#txtKey").val());
+			}
+			$("#btnClose").click();
+		});
+		$(document).on("click",".btnEdit",function(event){
+			event.preventDefault();
+			key = $(this).attr("data-key");
+			database.ref('notice/'+key).once("value").then(function(snapshot){
+				$("#txtName").val(snapshot.val().head_notice);
+				$("#txtnotice_body").val(snapshot.val().notice_body);
+				$("#txtPic").val(snapshot.val().date);		
+				$("#txtType").val("E");	
+				$("#txtKey").val(key);	
+			});
+			$( "#modal" ).addClass( "is-active" );
+		});
+		$(document).on("click",".btnRemove",function(event){
+			event.preventDefault();
+			key = $(this).attr("data-key");
+			database.ref('notice/' + key).remove();
+		})
+		
+		$( "#btnClose,.btnClose" ).click(function() {
+			$( "#modal" ).removeClass( "is-active" );
+		});
+
+		$( "#btnlogout" ).click(function() {
+			sessionStorage.clear();
+			setTimeout(function () { document.location.href = "index.html" }, 1000);
+		});
+	</script>
+
+
+
+
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+
+
+</body>
+</html>
