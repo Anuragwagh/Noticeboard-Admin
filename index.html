@@ -42,12 +42,17 @@ return false;
 </script>
 <body onload="init()">
 <!-- partial:index.partial.html -->
-<section class="hero is-info is-fullheight">
+<section class="hero is-info is-fullheight" style="background: #2980b9;  /* fallback for old browsers */
+background: -webkit-linear-gradient(to right, #2c3e50, #2980b9);  /* Chrome 10-25, Safari 5.1-6 */
+background: linear-gradient(to right, #2c3e50, #2980b9); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+">
   <div class="hero-body">
     <div class="container">
       <div class="columns is-centered">
         <div class="column is-5-tablet is-4-desktop is-3-widescreen">
-          <form action="" class="box" method="post">
+          <form action="" class="box" method="post" style="box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);">
+            <center><img src="logo.png" style="height: 90px">
+            <h3 style="font-size: 20px;"><b>Login</b></h3></center>
             <div class="field">
               <label for="" class="label" >Username</label>
               <div class="control has-icons-left">
